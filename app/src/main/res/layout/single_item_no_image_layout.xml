@@ -12,14 +12,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/A200"
+        android:background="@android:color/black"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/headline_view_no_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_margin="2dp"
             android:background="@android:color/white"
             android:gravity="center|center_horizontal"
             android:lines="4"

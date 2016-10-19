@@ -16,7 +16,7 @@ The following **required** functionality is completed:
   * [x] Sort order (oldest or newest)
 * [x] Subsequent searches have any filters applied to the search results
 * [x] User can tap on any image in results to see the full text of article **full-screen**
-* [-] User can **scroll down to see more articles**. The maximum number of articles is limited by the API search.
+* [x] User can **scroll down to see more articles**. The maximum number of articles is limited by the API search.
 
 The following **optional** features are implemented:
 
@@ -28,7 +28,7 @@ The following **optional** features are implemented:
 
 The following **bonus** features are implemented:
 
-* [-] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
+* [x] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
 * [x] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
 * [ ] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
@@ -59,10 +59,9 @@ Describe any challenges encountered while building the app.
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
-- [Glide] 
-- [ButterKnife]
-- [okhttp3]
-- [parceler]
+- [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
+- [ButterKnife](http://jakewharton.github.io/butterknife) - Field and method binding for Android views
+- [okhttp3](https://github.com/square/okhttp/tree/master/okhttp/src/main/java/okhttp3)
 
 ## License
 

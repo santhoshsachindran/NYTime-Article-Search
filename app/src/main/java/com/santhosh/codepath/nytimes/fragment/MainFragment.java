@@ -47,9 +47,9 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,7 +96,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     Toolbar mToolbar;
     @BindView(R.id.root_layout)
     FrameLayout mRootLayout;
+
+
     private ArticlesAdapter mArticlesAdapter;
+    private static int mPageNumber = 0;
 
     public MainFragment() {
         // Required empty public constructor
@@ -123,6 +126,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 editor.putString(QUERY_KEY, query);
                 editor.commit();
                 mArticlesList.clear();
+                mPageNumber = 0;
                 getLoaderManager().restartLoader(0, null, MainFragment.this);
                 searchView.clearFocus();
                 menu.findItem(R.id.action_search).collapseActionView();
@@ -161,13 +165,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         RecyclerView.LayoutManager layoutManager;
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager
-            // .VERTICAL);
-            layoutManager = new GridLayoutManager(getContext(), 3);
+            layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+            //layoutManager = new GridLayoutManager(getContext(), 3);
         } else {
-            //layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager
-            // .VERTICAL);
-            layoutManager = new GridLayoutManager(getContext(), 2);
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            //layoutManager = new GridLayoutManager(getContext(), 2);
         }
 
         if (!networkAvailable(getContext())) {
@@ -181,6 +183,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             mSwipeContainerEmpty.setOnRefreshListener(() -> {
                 if (networkAvailable(getContext())) {
                     mArticlesList.clear();
+                    mPageNumber = 0;
                     getLoaderManager().restartLoader(0, null, MainFragment.this);
                 } else {
                     mSwipeContainerEmpty.setRefreshing(false);
@@ -201,6 +204,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             mSwipeContainer.setOnRefreshListener(() -> {
                 if (networkAvailable(getContext())) {
                     mArticlesList.clear();
+                    mPageNumber = 0;
                     getLoaderManager().restartLoader(0, null, MainFragment.this);
                 } else {
                     mSwipeContainer.setRefreshing(false);
@@ -213,17 +217,18 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                     android.R.color.holo_red_light);
         }
 
-        // TODO: Remove once we make this unlimited scrolling.
-        //mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mArticlesAdapter = new ArticlesAdapter(mArticlesList);
         mRecyclerView.setAdapter(mArticlesAdapter);
 
         mRecyclerView.addOnScrollListener(
-                new EndlessRecyclerViewScrollListener((GridLayoutManager) layoutManager) {
+                new EndlessRecyclerViewScrollListener((StaggeredGridLayoutManager) layoutManager) {
                     @Override
                     public void onLoadMore(int page, int totalItemsCount) {
-                        getLoaderManager().restartLoader(0, null, MainFragment.this);
+                        if (mPageNumber < page) {
+                            mPageNumber = page;
+                            getLoaderManager().restartLoader(0, null, MainFragment.this);
+                        }
                     }
                 });
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(),
@@ -261,11 +266,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> data) {
         if (data != null && data.size() > 0) {
-            if (mArticlesList.size() > 0) {
-                mArticlesList.addAll(data);
-            } else {
-                mArticlesList = data;
-            }
+            mArticlesList.addAll(data);
 
             if (networkAvailable(getContext())) {
                 mRecyclerView.setVisibility(View.VISIBLE);
@@ -274,9 +275,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 mEmptyView.setVisibility(View.GONE);
             }
 
-            mRecyclerView.setAdapter(new ArticlesAdapter(mArticlesList));
-            //mArticlesAdapter.notifyDataSetChanged();
-            mRecyclerView.invalidate();
+            mArticlesAdapter.notifyDataSetChanged();
 
             mSwipeContainer.setRefreshing(false);
             mSwipeContainerEmpty.setRefreshing(false);
@@ -287,15 +286,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(Loader<List<Article>> loader) {
-        if (mRecyclerView != null) {
-            mRecyclerView.setAdapter(null);
-            mRecyclerView.invalidate();
-        }
     }
 
     @Override
     public void onFinishEditDialog() {
         mArticlesList.clear();
+        mPageNumber = 0;
         getLoaderManager().restartLoader(0, null, this);
     }
 

@@ -67,8 +67,13 @@ public class NewsPrefEditFragment extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_edit_pref, null);
         ButterKnife.bind(this, view);
 
+        final SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                SHARED_PREFS_NAME,
+                Context.MODE_PRIVATE);
         final DateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.US);
         final Calendar calendar = Calendar.getInstance();
+
+        String startDate = sharedPreferences.getString(START_DATE, df.format(calendar.getTime()));
 
         final DatePickerDialog.OnDateSetListener datePicker =
                 (view1, year, monthOfYear, dayOfMonth) -> {
@@ -78,13 +83,12 @@ public class NewsPrefEditFragment extends DialogFragment {
                     mStartDate.setText(df.format(calendar.getTime()));
                 };
 
-        mStartDate.setOnClickListener(v -> new DatePickerDialog(getContext(), datePicker, calendar
-                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)).show());
+        final int year = Integer.valueOf(startDate.substring(0, 4));
+        final int month = Integer.valueOf(startDate.substring(4, 6)) - 1;
+        final int days = Integer.valueOf(startDate.substring(6));
 
-        final SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                SHARED_PREFS_NAME,
-                Context.MODE_PRIVATE);
+        mStartDate.setOnClickListener(
+                v -> new DatePickerDialog(getContext(), datePicker, year, month, days).show());
 
         alertDialogBuilder.setView(view);
 

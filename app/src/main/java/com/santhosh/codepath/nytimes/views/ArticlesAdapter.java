@@ -31,7 +31,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
-
         View view;
 
         switch (viewType) {
@@ -85,7 +84,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mArticles.size();
+        if (mArticles != null) {
+            return mArticles.size();
+        }
+
+        return 0;
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
