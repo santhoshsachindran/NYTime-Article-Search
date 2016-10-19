@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">NYTimes</string>
+    <string name="no_network">No internet connection ! Try again later.</string>
+    <string name="no_data">No data available for the query! Please try again later.</string>
+    <string name="news_thumbnail">News thumbnail</string>
+    <string name="share_link">Share Link</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter news</string>
+    <string name="sort">Sort</string>
+    <string name="start_date">Start Date</string>
+    <string name="filter_items">Add Filter</string>
+    <string name="arts">Arts</string>
+    <string name="fashion_and_style"><![CDATA[Fashion & Style]]></string>
+    <string name="sports">Sports</string>
+    <string name="news_desk_value">News desk values</string>
+</resources>
