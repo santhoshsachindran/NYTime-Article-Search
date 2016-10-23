@@ -45,11 +45,9 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's a walkthrough of implemented user stories: Link to the mp4 file for the demo.
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+<img src='https://github.com/santhoshsachindran/NYTime-Article-Search/blob/master/Project2.mp4' />
 
 ## Notes
 
