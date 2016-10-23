@@ -45,9 +45,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories: Link to the mp4 file for the demo.
-
-<img src='https://github.com/santhoshsachindran/NYTime-Article-Search/blob/master/Project2.mp4' />
+[Link to Video Walkthrough] https://github.com/santhoshsachindran/NYTime-Article-Search/blob/master/Project2.mp4
 
 ## Notes
 
