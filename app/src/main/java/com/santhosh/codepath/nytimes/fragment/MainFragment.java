@@ -99,6 +99,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 
     private ArticlesAdapter mArticlesAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private static int mPageNumber = 0;
 
     public MainFragment() {
@@ -162,14 +163,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
 
-        RecyclerView.LayoutManager layoutManager;
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-            //layoutManager = new GridLayoutManager(getContext(), 3);
+        if (getResources().getConfiguration().orientation == Configuration
+                .ORIENTATION_LANDSCAPE) {
+            mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager
+                    .VERTICAL);
+            //mLayoutManager = new GridLayoutManager(getContext(), 3);
         } else {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            //layoutManager = new GridLayoutManager(getContext(), 2);
+            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager
+                    .VERTICAL);
+            //mLayoutManager = new GridLayoutManager(getContext(), 2);
         }
 
         if (!networkAvailable(getContext())) {
@@ -217,12 +220,13 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                     android.R.color.holo_red_light);
         }
 
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mArticlesAdapter = new ArticlesAdapter(mArticlesList);
         mRecyclerView.setAdapter(mArticlesAdapter);
 
         mRecyclerView.addOnScrollListener(
-                new EndlessRecyclerViewScrollListener((StaggeredGridLayoutManager) layoutManager) {
+                new EndlessRecyclerViewScrollListener((StaggeredGridLayoutManager)
+                        mLayoutManager) {
                     @Override
                     public void onLoadMore(int page, int totalItemsCount) {
                         if (mPageNumber < page) {
@@ -282,6 +286,18 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         } else {
             Snackbar.make(mRootLayout, R.string.no_data, Snackbar.LENGTH_SHORT).show();
         }
+
+        mRecyclerView.addOnScrollListener(
+                new EndlessRecyclerViewScrollListener((StaggeredGridLayoutManager)
+                        mLayoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount) {
+                        if (mPageNumber < page) {
+                            mPageNumber = page;
+                            getLoaderManager().restartLoader(0, null, MainFragment.this);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -393,7 +409,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             queryUrl.append(sharedPreferences.getString(START_DATE, "20161001") + "&");
             if (mArticlesList != null && mArticlesList.size() > 0) {
                 queryUrl.append(PAGE);
-                queryUrl.append((mArticlesList.size() / 10) + "&");
+                queryUrl.append(mPageNumber + "&");
             }
             if (isItemChecked && newsDesk != null && newsDesk.size() > 0) {
                 queryUrl.append(FQ_KEY);
